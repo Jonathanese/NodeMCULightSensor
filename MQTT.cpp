@@ -20,7 +20,7 @@ void MQTT_Loop()
 
 	if (WiFi.status() != WL_CONNECTED) {
 		delay(1);
-		Serial.print("WIFI Disconnected. Attempting reconnection.");
+		DebugMessage(DM_ERROR, "WIFI Disconnected. Attempting reconnection.");
 		WiFi_Setup();
 		return;
 	}
@@ -32,12 +32,12 @@ void MQTT_Loop()
 void reconnect() {
 	// Loop until we're reconnected
 	while (!client.connected()) {
-		DebugMessage(DM_ERROR, "Connecting to MQTT");
+		DebugMessage(DM_INFO, "Connecting to MQTT");
 
 		// Attempt to connect
 		if (client.connect(SECRET_MQTT_NAME, SECRET_MQTT_ID, SECRET_MQTT_PWD)) {
 			DebugMessage(DM_INFO, "Connected to MQTT Server");
-			client.subscribe(SECRET_MQTT_TOPIC);
+			client.subscribe(SECRET_MQTT_STATE_TOPIC);
 		}
 		else {
 			DebugMessage(DM_ERROR, "Retry in 5s");
@@ -60,3 +60,9 @@ void callback(char* topic, byte* payload, unsigned int length)
 
 	delete message;
 }
+
+void publish(char* buffer)
+{
+	client.publish(SECRET_MQTT_STATE_TOPIC, buffer, true);
+}
+

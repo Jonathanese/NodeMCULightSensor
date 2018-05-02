@@ -12,10 +12,13 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 
+#define MQTT_MAX_PACKET_SIZE 512
+const int BUFFER_SIZE = JSON_OBJECT_SIZE(10);
+
 void MQTT_Setup();
 void MQTT_Loop();
 void reconnect();
 void callback(char* topic, byte* payload, unsigned int length);
-
+void publish(char* buffer);
 #endif
 
